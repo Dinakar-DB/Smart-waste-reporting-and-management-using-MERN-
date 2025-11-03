@@ -1,0 +1,14 @@
+[{
+  "_id": {
+    "$oid": "6598f6bc94bcae19a88887cb"
+  },
+  "isAdmin": false,
+  "city": "chennai",
+  "name": "User",
+  "email": "user@gmail.com",
+  "passwordHash": "$2a$10$rTbtMubpfnvgx6FbfKikVee.mClvgKAYStsYvun8NdkMDTrOGbJxy",
+  "phone": "9876543210",
+  "question1": "dog",
+  "question2": "sathish",
+  "__v": 0
+}]

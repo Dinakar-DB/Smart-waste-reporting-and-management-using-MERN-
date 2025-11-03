@@ -1,0 +1,41 @@
+[{
+  "_id": {
+    "$oid": "6582d72db3f3f02fa0a086b7"
+  },
+  "address": "no 1 , 1st street, ambattur, chennai-600001",
+  "area": "Ambattur",
+  "name": "Driver",
+  "email": "driver@gmail.com",
+  "passwordHash": "$2a$10$KKd7gpR1pqiBP6lB2PTkau9vsI9EDbvJ5a54Fb4TOchnUlpEmHA4S",
+  "mobile": "9876543210",
+  "aadharno": "1234567890",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65857a5f34bbfa3d40c7abe7"
+  },
+  "address": "123n kumbakonam",
+  "area": "Kumbakonam",
+  "adminemail": "admin@gmail.com",
+  "name": "Driver2",
+  "email": "driverkum@gmail.com",
+  "passwordHash": "$2a$10$TM.expq/2zN1XMDfd3MCbei.Ho07mN6kbrLoQTETYpoA2eHqfa3Em",
+  "mobile": "9876543210",
+  "aadharno": "1234567890",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "659bea1da6b4ac294832ff19"
+  },
+  "address": "no 1 , Madiwala , banglore city",
+  "area": "Madiwala",
+  "adminemail": "admin@gmail.com",
+  "name": "Driver3",
+  "email": "driver3@gmail.com",
+  "passwordHash": "$2a$10$vAT.aCYUmn9tYY8riIixH.JGrbarKnRKYDnhpZQVgEEbTpHZTasRm",
+  "mobile": "9876543210",
+  "aadharno": "55545454536747",
+  "__v": 0
+}]

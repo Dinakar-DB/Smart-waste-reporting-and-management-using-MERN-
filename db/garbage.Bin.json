@@ -1,0 +1,60 @@
+[{
+  "_id": {
+    "$oid": "659be913a6b4ac294832ff02"
+  },
+  "lat": 13.0827,
+  "long": 80.2707,
+  "adminemail": "admin@gmail.com",
+  "area": "CMBT",
+  "locality": "Mogappair",
+  "landmark": "near hospital",
+  "city": "Chennai",
+  "loadtype": "Daily",
+  "driveremail": "driver@gmail.com",
+  "cycleperiod": "Daily",
+  "bestroute": "ambattur to avadi main road",
+  "dateCreated": {
+    "$date": "2024-01-08T12:22:43.234Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "659be994a6b4ac294832ff08"
+  },
+  "lat": 13.089055117516665,
+  "long": 80.21090635893528,
+  "adminemail": "admin@gmail.com",
+  "area": "Slik Board",
+  "locality": "near by smart shop",
+  "landmark": "Electronic city",
+  "city": "Banglore",
+  "loadtype": "Twice",
+  "driveremail": "driver3@gmail.com",
+  "cycleperiod": "Twice",
+  "bestroute": "NH 45 road Flyover to Forum mall ",
+  "dateCreated": {
+    "$date": "2024-01-08T12:24:52.533Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "659e38357f6a3c3b246ada45"
+  },
+  "lat": 13.081398505383657,
+  "long": 80.27049217288621,
+  "adminemail": "admin@gmail.com",
+  "area": "Anna Nagar",
+  "locality": "Chennai",
+  "landmark": "Near Bus Stand",
+  "city": "Chennai",
+  "loadtype": "Twice",
+  "driveremail": "driver@gmail.com",
+  "cycleperiod": "Daily",
+  "bestroute": "Use Main road",
+  "dateCreated": {
+    "$date": "2024-01-10T06:24:53.480Z"
+  },
+  "__v": 0
+}]

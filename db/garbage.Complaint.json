@@ -1,0 +1,13 @@
+[{
+  "_id": {
+    "$oid": "659e39697f6a3c3b246ada6b"
+  },
+  "status": "Approved",
+  "binarea": "Anna Nagar",
+  "useremail": "user@gmail.com",
+  "complaint": "Bin is not cleaned",
+  "dateCreated": {
+    "$date": "2024-01-10T06:30:01.481Z"
+  },
+  "__v": 0
+}]
