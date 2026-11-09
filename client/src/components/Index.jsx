@@ -1,111 +1,45 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import "./css/bootstrap.min.css";
-import "./css/owl.carousel.min.css";
-import "./css/font-awesome.min.css";
-import "./css/animate.css";
-import "./css/font-awesome.min.css";
-import "./css/lineicons.min.css";
-import "./css/magnific-popup.css";
-import "./css/style.css";
-import "./js/jquery.min.js";  
-import "./js/bootstrap.bundle.min.js";
-{/*
-import "./js/waypoints.min.js";
-import "./js/jquery.easing.min.js";
-import "./js/owl.carousel.min.js";
-import "./js/jquery.magnific-popup.min.js";
-*/}
-import imgSmall from "./img/core-img/logo-small.png";
-import imgBg from "./img/bg-img/9.png";
-import imgBack from "./img/bg-img/gar.jpg";
-import imgMech from "./img/mechanic.png";
-import Logout from './Logout.jsx';
-import Title from './Title.jsx';
+import logo from './img/core-img/logo-small.png';
+import heroImage from './img/bg-img/gar.jpg';
 
-const Index = () => {
+const portals = [
+  { to: '/user_login', name: 'Resident', label: 'Submit and track service requests', icon: '♙', tone: 'resident' },
+  { to: '/driver_login', name: 'Driver', label: 'View your assigned route and work', icon: '↗', tone: 'driver' },
+  { to: '/admin_login', name: 'Administrator', label: 'Manage city collection operations', icon: '▦', tone: 'admin' },
+];
+
+export default function Index() {
   return (
-    <div>
-      
-      
-        <div className="header-area" id="headerArea">
-        <div className="container h-100 d-flex align-items-center justify-content-between">
-    
-        <div className="header-area" id="headerArea">
-        <div className="container h-100 d-flex align-items-center justify-content-between">
-            <div className="logo-wrapper" style={{color:'black'}}><img src={imgSmall} alt=""/><strong> <Title /> </strong></div>
-        
-            <div className="suha-navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#suhaOffcanvas" aria-controls="suhaOffcanvas"><span></span><span></span><span></span></div>
-        </div>
-        </div>  
-
-{/* tabindex="-1" */}
-        <div className="offcanvas offcanvas-start suha-offcanvas-wrap"  id="suhaOffcanvas" aria-labelledby="suhaOffcanvasLabel">
-      <button className="btn-close btn-close-white text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-
-      <div className="offcanvas-body">
-        <div className="sidenav-profile">
-          <div className="user-profile"><img src={imgBg} alt=""/></div>
-          <div className="user-info">
-            <h6 className="user-name mb-1">Garbage management app</h6>
-         
+    <div className="landing-page">
+      <header className="landing-header">
+        <Link className="app-brand" to="/"><img src={logo} alt="" /><span><strong>GreenRoute</strong><small>Waste services</small></span></Link>
+        <span className="landing-header__note"><i /> Community collection portal</span>
+      </header>
+      <main className="landing-main">
+        <section className="landing-hero">
+          <div className="landing-hero__copy">
+            <span className="landing-kicker"><i /> CLEANER STREETS START HERE</span>
+            <h1>Better waste<br /><em>management</em><br />for every neighborhood.</h1>
+            <p>One simple place to report collection issues, coordinate local routes, and keep your community moving.</p>
+            <a className="landing-scroll" href="#portals"><span>↓</span> Choose your portal</a>
           </div>
-        </div>
-    
-        <ul className="sidenav-nav ps-0">
-          <li><Link to="/user_register">User Register</Link></li>
-          {/*<li><Link to="/user_register">User Register</Link></li>*/}
-    
-          </ul>
-      </div>
+          <div className="landing-hero__visual">
+            <img src={heroImage} alt="A greener neighborhood with organized waste collection" />
+            <div className="visual-badge"><span>♻</span><div><strong>Cleaner, together</strong><small>Local action makes a difference</small></div></div>
+            <span className="visual-orbit visual-orbit--one" /><span className="visual-orbit visual-orbit--two" />
+          </div>
+        </section>
+        <section className="portal-section" id="portals">
+          <div className="portal-section__heading"><div><span>GET STARTED</span><h2>Choose your workspace</h2></div><p>Sign in to access the tools for your role.</p></div>
+          <div className="portal-grid">
+            {portals.map((portal) => <Link className={`portal-card portal-card--${portal.tone}`} key={portal.to} to={portal.to}>
+              <span className="portal-card__icon">{portal.icon}</span><span className="portal-card__body"><strong>{portal.name}</strong><small>{portal.label}</small></span><span className="portal-card__arrow">↗</span>
+            </Link>)}
+          </div>
+        </section>
+      </main>
+      <footer className="landing-footer"><span>GreenRoute Waste Services</span><span>Supporting cleaner, healthier communities.</span></footer>
     </div>
-      </div>
-    </div>
-
-      <div className="container ">
-        <div className="pt-3">
-            <div className="single-hero-slide" >
-                <img src={imgBack} className="img-fluid"   />
-            </div>            
-      </div>
-      </div>
-
-
-      <div className="product-catagories-wrapper py-3 justify-content-center text-center">
-        <div className="container">
-          <div className="section-heading">
-
-          </div>
-          <div className="product-catagory-wrap">
-            <div className="row g-3">
-              <div className="col-6">
-                <div className="card catagory-card">
-               <Link to="/user_login" className="btn btn-warning btn-lg w-100">
-                    User </Link>
-                </div>
-              </div>
-			   <div className="col-6">
-                <div className="card catagory-card">
-                  <Link to="/driver_login" className="btn btn-warning btn-lg w-100" >
-                    Driver </Link>
-                </div>
-              </div>
-			   <div className="col-6">
-                <div className="card catagory-card">
-					      <Link to="/admin_login" className="btn btn-warning btn-lg w-100" >
-                    Admin</Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-
-
-</div>
-  )
+  );
 }
-
-export default Index

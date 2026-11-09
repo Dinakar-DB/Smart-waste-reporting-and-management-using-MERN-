@@ -42,7 +42,7 @@ const UpdateBin = () => {
   useEffect(() => {
     const fetchBinDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/v1/bin/${id}`);
+        const response = await fetch(`/api/v1/bin/${id}`, { headers: { 'x-auth-token': token } });
         if (response.ok) {
           const data = await response.json();
           setEditedBin({
@@ -87,11 +87,11 @@ const UpdateBin = () => {
         return;
       }*/}
 
-      const response = await fetch(`http://localhost:4000/api/v1/bin/${id}`, {
+      const response = await fetch(`/api/v1/bin/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-        //  'x-auth-token': token,
+          'x-auth-token': token,
         },
         body: JSON.stringify(editedBin),
       });

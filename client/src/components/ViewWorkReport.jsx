@@ -32,7 +32,7 @@ const ViewWorkReport = () => {
   useEffect(() => {
     const fetchBusinessData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/v1/work/`);
+        const response = await axios.get(`/api/v1/work/`, { headers: { 'x-auth-token': localStorage.getItem('token') } });
         if (response.status === 200) {
           setBusinessData(response.data);
         } else {

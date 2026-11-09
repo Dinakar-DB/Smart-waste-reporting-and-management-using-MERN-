@@ -10,6 +10,7 @@ const auth = (req, res, next) => {
 
   try {  //'I-love-my-dog'
     const secret = process.env.secret;
+    if (!secret) return res.status(500).json({ message: 'Server authentication is not configured.' });
 
     const decoded = jwt.verify(token, secret);
 

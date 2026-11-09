@@ -1,7 +1,5 @@
-import React, { useState,useEffect  } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 
-import axios from 'axios';
 import "./css/bootstrap.min.css";
 import "./css/owl.carousel.min.css";
 import "./css/font-awesome.min.css";
@@ -25,21 +23,6 @@ const ResetPassword = () => {
       const [validationErrors, setValidationErrors] = useState({});
         
     /////////////Email Validation //////////////
-      const [existingEmails, setExistingEmails] = useState([]);
-
-      useEffect(() => {
-        const fetchExistingEmails = async () => {
-          try {
-            const response = await axios.get('http://localhost:4000/api/v1/user/');
-            const emails = response.data.map(user => user.email);
-            setExistingEmails(emails);
-          } catch (error) {
-            console.error('Error fetching existing emails:', error);
-          }
-        };
-
-        fetchExistingEmails();
-      }, []);
     /////////////Email Validation //////////////
 
       const handleChange = (e) => {
@@ -87,7 +70,7 @@ const ResetPassword = () => {
         }
         
     try {
-      const response = await fetch('http://localhost:4000/api/v1/user/reset_password', {
+      const response = await fetch('/api/v1/user/reset_password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -169,4 +152,4 @@ const ResetPassword = () => {
   )
 }
 
-export default ResetPassword 
+export default ResetPassword

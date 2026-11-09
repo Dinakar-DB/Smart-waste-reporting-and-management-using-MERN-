@@ -20,81 +20,13 @@ import Title from './Title.jsx';
 const ViewDriver = () => {
 
 
-  ////////////////////////////////////////////////
-  //////////////Navgation Code Start//////////////
-  ////////////////////////////////////////////////
-  
-  const [driverId, setDriverId] = useState(''); // Set the initial value accordingly
-  // Function to get user location and update on the server
-  const getUserLocation = async () => {
-    
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-          console.log(`ID: ${binId}`);
-          updateLocationOnServer(latitude, longitude);
-        },
-        (error) => {
-          console.error(`Error getting user location: ${error.message}`);
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  };
-   // Update location on the server
-   async function updateLocationOnServer(latitude, longitude) {
-  //  const businessId = "6576e6dcfa3350243c6af5b3"; // Replace with the actual bin ID
-    const url = `http://localhost:4000/api/v1/bin/map/` + binId;
-  
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          // Add any additional headers, such as authentication token if needed
-        },
-        body: JSON.stringify({
-          lat: latitude,
-          long: longitude,
-        }),
-      });
-  
-      if (response.ok) {
-        alert("Location updated successfully!");
-        console.log("Location updated successfully!");
-        window.location.reload();
-      } else {
-        console.error(`Error updating location: ${response.statusText}`);
-      }
-    } catch (error) {
-      console.error(`Error updating location: ${error.message}`);
-    }
-  }
-  // Trigger getUserLocation when businessId changes
-  useEffect(() => {
-    if (driverId) {
-      getUserLocation();
-    }
-  }, [driverId]);
-
-  ////////////////////////////////////////////////
-  //////////////Navgation Code End ///////////////
-  ////////////////////////////////////////////////
-
-  ////////////////////////////////////////////////
-  //////////////Update Delete Code ///////////////
-  ////////////////////////////////////////////////
-
   const navigate = useNavigate();
 
   const Removefunction = (id) => {
     if (window.confirm('Do you want to remove?')) {
       const token = localStorage.getItem('token');
 
-        fetch("http://localhost:4000/api/v1/driver/" + id, {
+        fetch("/api/v1/driver/" + id, {
             method: "DELETE",
             headers: {
               'Content-Type': 'application/json',
@@ -125,7 +57,7 @@ const UpdateLocation = (id) => {
   useEffect(() => {
     const fetchDriverData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/v1/driver/');
+        const response = await fetch('/api/v1/driver/', { headers: { 'x-auth-token': localStorage.getItem('token') } });
         const filteredDriver = await response.json();
 
         // Assuming 'driveremail' is the key in cookies

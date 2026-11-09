@@ -42,11 +42,8 @@ const PostDriver = () => {
 
   const postDriverData = async () => {
     const token = localStorage.getItem('token');
-    const adminEmail = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)adminemail\s*=\s*([^;]*).*$)|^.*$/, '$1'));
-    //console.log(adminEmail);  // Output: driver@gmail.com
-
     try {
-      const response = await fetch('http://localhost:4000/api/v1/driver/', {
+      const response = await fetch('/api/v1/driver/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +51,6 @@ const PostDriver = () => {
         },
         body: JSON.stringify({
           ...formData,
-          adminemail: adminEmail,
         }),
       });
 
@@ -65,7 +61,9 @@ const PostDriver = () => {
         window.location.href = "/view_driver";
 
       } else {
-        console.error('Error posting driver data:', response.statusText);
+        const details = await response.json().catch(() => ({}));
+        alert(details.message || 'Could not create driver. Check the details and try again.');
+        console.error('Error creating driver:', details.message || response.statusText);
       }
     } catch (error) {
       console.error('Error posting driver data:', error.message);  
@@ -97,7 +95,6 @@ const PostDriver = () => {
           isValid = false;
         }
         setValidationErrors(errors);
-        alert('Fill all the fields');
         return isValid;
       };
     
@@ -171,25 +168,25 @@ const PostDriver = () => {
                   <div className="title mb-2"><span>Driver Name</span></div>
                   <input className="form-control" name="name" id="name"
                     value={formData.name}
-                    onChange={handleInputChange}  type="text" />
+                    onChange={handleInputChange}  type="text" required />
                 </div>
 				<div className="mb-3">
                   <div className="title mb-2"><span>Create Email for Driver</span></div>
                   <input className="form-control" name="email" id="email"
                     value={formData.email}
-                    onChange={handleInputChange}  type="text"/>
+                    onChange={handleInputChange}  type="email" required />
                 </div>
 					 <div className="mb-3">
                   <div className="title mb-2"><span>Create Password</span></div>
                   <input className="form-control" name="passwordHash" id="passwordHash"
                     value={formData.passwordHash}
-                    onChange={handleInputChange}  type="text" />
+                    onChange={handleInputChange}  type="password" required />
                 </div>
                 <div className="mb-3">
                   <div className="title mb-2"><span>Driver Mobile num:</span></div>
                   <input className="form-control" name="mobile" id="mobile"
                     value={formData.mobile}
-                    onChange={handleInputChange}   type="text"/>
+                    onChange={handleInputChange}   type="tel" required />
                   </div>     
                   <div className="mb-3">
                   <div className="title mb-2"><span>Driver Address</span></div>
@@ -209,7 +206,7 @@ const PostDriver = () => {
                   <div className="title mb-2"><span>Driver ID num:</span></div>
                   <input className="form-control" name="aadharno" id="aadharno"
                     value={formData.aadharno}
-                    onChange={handleInputChange}  type="number"/>
+                    onChange={handleInputChange}  type="number" required />
                 </div>
 
 

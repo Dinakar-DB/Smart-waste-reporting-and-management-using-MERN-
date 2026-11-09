@@ -31,7 +31,7 @@ const UpdateStatusAdmin = () => {
   useEffect(() => {
     const fetchComplaintDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/v1/complaint/${id}`);
+        const response = await fetch(`/api/v1/complaint/${id}`, { headers: { 'x-auth-token': localStorage.getItem('token') } });
         if (response.ok) {
           const data = await response.json();
           setEditedComplaint({
@@ -60,7 +60,7 @@ const UpdateStatusAdmin = () => {
     e.preventDefault();
     try {
 
-      const response = await fetch(`http://localhost:4000/api/v1/complaint/${id}`, {
+      const response = await fetch(`/api/v1/complaint/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -32,14 +32,11 @@ const EditProfile = (id) => {
   useEffect(() => {
     const fetchBinData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/v1/user/');
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/v1/user/me', { headers: { 'x-auth-token': token } });
         const data = await response.json();
-        // Assuming 'email' is the key in cookies
-        const useremail = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)email\s*=\s*([^;]*).*$)|^.*$/, '$1'));
-         // Filter location data based on vendoremail
-         const filteredBin = data.filter((user) => user.email === useremail);
         if (response.status === 200) {
-          setBinData(filteredBin);
+          setBinData([data]);
         } else {
           console.error('Error fetching user data:', response.statusText);
         }

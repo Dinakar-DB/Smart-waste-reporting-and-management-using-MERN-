@@ -33,7 +33,7 @@ const UserLogin = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:4000/api/v1/user/login', {
+      const response = await axios.post('/api/v1/user/login', {
         email: email,
         password: password,
       });
@@ -42,17 +42,16 @@ const UserLogin = () => {
       if (response.status === 200) {
           // Store the JWT token in localStorage
           localStorage.setItem('token', response.data.token);
+          localStorage.setItem('role', 'user');
 
           // Include the token in the x-auth-token header for subsequent requests
           axios.defaults.headers.common['x-auth-token'] = response.data.token;
 
           
         // Redirect to the home page or perform other actions
+        setCookie('email', response.data.user, { path: '/' , sameSite: 'strict' });
         alert('Login Successful!');
-        window.location.href = "user_home";
-        console.log('Login successful!');
-
-        setCookie('email', email, { path: '/' , sameSite: 'strict' });
+        window.location.href = "/user_home";
 
         setError('');
         // You can handle the token and user details here, such as storing them in state or cookies
@@ -63,8 +62,9 @@ const UserLogin = () => {
       }
     } catch (error) {
       console.error('Error during login:', error.message);
-      setError('Internal Server Error. Please try again later.');
-      alert('Login Unsuccessful!');
+      const message = error.response?.data?.message || (typeof error.response?.data === 'string' ? error.response.data : '') || 'Unable to reach the server. Please try again.';
+      setError(message);
+      alert(message);
     }
   };
 

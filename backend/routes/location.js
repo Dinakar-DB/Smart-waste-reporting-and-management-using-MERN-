@@ -5,7 +5,7 @@ const auth = require('../helpers/jwt');
 
 // vendoremail  useremail  complaint mobile lat long status
 
-router.get(`/`,  async (req, res) =>{
+router.get(`/`, auth, async (req, res) =>{
     const locationList = await Location.find();
 
     if(!locationList) {
@@ -16,7 +16,7 @@ router.get(`/`,  async (req, res) =>{
 
 
     
-router.get(`/:id`, async (req, res) =>{
+router.get(`/:id`, auth, async (req, res) =>{
     const locationList = await Location.findById(req.params.id);
     if(!locationList) {
         res.status(500).json({success: false})
@@ -24,7 +24,10 @@ router.get(`/:id`, async (req, res) =>{
     res.send(locationList);
 })
 
-router.post('/',  async (req,res)=>{
+router.post('/', auth, async (req,res)=>{
+    if (!req.user?.useremail || req.user.useremail !== req.body.useremail) {
+        return res.status(403).json({ message: 'Access denied.' });
+    }
     let location = new Location({
         vendoremail: req.body.vendoremail,
         useremail: req.body.useremail,
@@ -44,7 +47,8 @@ router.post('/',  async (req,res)=>{
 
 
 
-router.put('/:id',async (req, res)=> {
+router.put('/:id', auth, async (req, res)=> {
+    if (!req.user?.isAdmin && !req.user?.driveremail) return res.status(403).json({ message: 'Access denied.' });
     const location = await Location.findByIdAndUpdate(
         req.params.id,
         {        
@@ -61,7 +65,7 @@ router.put('/:id',async (req, res)=> {
 
 
 
-router.put('/map/:id',async (req, res)=> {
+router.put('/map/:id', auth, async (req, res)=> {
     const location = await Location.findByIdAndUpdate(
         req.params.id,
         {        

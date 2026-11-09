@@ -1,137 +1,17 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import "./css/bootstrap.min.css";
-import "./css/owl.carousel.min.css";
-import "./css/font-awesome.min.css";
-import "./css/animate.css";
-import "./css/font-awesome.min.css";
-import "./css/lineicons.min.css";
-import "./css/magnific-popup.css";
-import "./css/style.css";
-import "./js/jquery.min.js";  
-import "./js/bootstrap.bundle.min.js";
-{/*
-import "./js/waypoints.min.js";
-import "./js/jquery.easing.min.js";
-import "./js/owl.carousel.min.js";
-import "./js/jquery.magnific-popup.min.js";
-*/}
-import imgSmall from "./img/core-img/logo-small.png";
-import imgBg from "./img/bg-img/9.png";
-import imgMech from "./img/mechanic.png";
-import imgRequest from "./img/destination.png";
-import imgProfile from "./img/user.png";
-import newcomplaint from "./img/bg-img/garbage.png";
-import mycomplaint from "./img/bg-img/mycomplaint.png";
-import Logout from './Logout';
-import Title from './Title';
+import React from 'react';
+import DashboardShell, { ActionCard, WelcomePanel } from './DashboardShell.jsx';
 
-const UserHome = () => {
+export default function UserHome() {
   return (
-    <div>
-        <div>
-      
-        <div className="header-area" id="headerArea">
-        <div className="container h-100 d-flex align-items-center justify-content-between">
-    
-        <div className="header-area" id="headerArea">
-        <div className="container h-100 d-flex align-items-center justify-content-between">
-            <div className="logo-wrapper" style={{color:'black'}}><img src={imgSmall} alt=""/> <Title /></div>
-        
-            <div className="suha-navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#suhaOffcanvas" aria-controls="suhaOffcanvas"><span></span><span></span><span></span></div>
-        </div>
-        </div>  
-
-{/* tabindex="-1" */}
-        <div className="offcanvas offcanvas-start suha-offcanvas-wrap"  id="suhaOffcanvas" aria-labelledby="suhaOffcanvasLabel">
-      <button className="btn-close btn-close-white text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-
-      <div className="offcanvas-body">
-        <div className="sidenav-profile">
-          <div className="user-profile"><img src={imgBg} alt=""/></div>
-          <div className="user-info">
-            <h6 className="user-name mb-1">Garbage management</h6>
-         
-          </div>
-        </div>
-    
-        <ul className="sidenav-nav ps-0">
-          <li><Link to="/user_home"><i className="lni lni-home"></i>Home</Link></li>
-          <li><Logout /></li>  
-          </ul>
+    <DashboardShell role="user" eyebrow="RESIDENT SERVICES" title="Your neighborhood, a little cleaner." description="Report a collection issue, follow your requests, and keep your account up to date.">
+      <WelcomePanel role="user" label="Welcome to GreenRoute" title="See something that needs attention?" description="Choose a nearby collection point and tell us what needs to be taken care of. We’ll keep your request together in one place." />
+      <div className="section-title"><div><span>YOUR SERVICES</span><h2>What would you like to do?</h2></div></div>
+      <div className="action-grid action-grid--resident">
+        <ActionCard to="/view_bin_user" icon="＋" category="Make a report" title="New complaint" description="Find a bin and report an overflowing or missed collection." action="Start report" />
+        <ActionCard to="/view_complaints_user" icon="◌" category="Stay informed" title="My complaints" description="Check the status of requests you have already submitted." action="View status" />
+        <ActionCard to="/user_profile" icon="♙" category="Your account" title="My profile" description="Review your contact details and account information." action="View profile" />
       </div>
-    </div>
-      </div>
-    </div>
-    <div className="page-content-wrapper">
-      <div className="top-products-area py-3">
-        <div className="container">
-          <div className="section-heading d-flex align-items-center justify-content-center">
-            <h4><div className="text-success">User Home</div></h4>
-          </div>
-         
-          <div className="row g-3">
-            <div className="col-6 col-md-12">
-              <div className="card horizontal-product-card">
-                <div className="card-body d-flex align-items-center">
-                  <div className="card-body"><img src={newcomplaint} className="img-fluid" style={{width:64, height:64}} />{" "}
-                  <Link  className="text-dark" to="/view_bin_user">
-                   New Complaint </Link> 
-                    </div>
-                </div>
-              </div>
-            </div>
-            </div>
-         
-          <div className="row g-3">
-            <div className="col-6 col-md-12">
-              <div className="card horizontal-product-card">
-                <div className="card-body d-flex align-items-center">
-                  <div className="card-body"><img src={mycomplaint} className="img-fluid" style={{width:64, height:64}} />{" "}
-                  <Link  className="text-success" to="/view_complaints_user">
-                   My Complaints  </Link> 
-                    </div>
-                </div>
-              </div>
-            </div>
-            </div>
-
-          <div className="row g-3">
-            <div className="col-6 col-md-12">
-              <div className="card horizontal-product-card">
-                <div className="card-body d-flex align-items-center">
-                  <div className="card-body"><img src={imgProfile} className="img-fluid" style={{width:64, height:64}} />{" "}
-                  <Link  className="text-success" to="/user_profile">
-                   My Profile  </Link> 
-                    </div>
-                </div>
-              </div>
-            </div>
-            </div>
-
-            </div>
-            </div>
-
-
-            </div>
-            
-            <div className="footer-nav-area" id="footerNav">
-              <div className="container h-100 px-0">
-                <div className="suha-footer-nav h-100">
-                  <ul className="h-100 d-flex align-items-center justify-content-between ps-0">
-                    <li className="active"> <Link to="/user_home" ><i className="lni lni-home"></i>Home </Link> </li>
-                    <li><Logout /></li> 
-                    
-                
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-
-</div>
-</div>
-  )
+      <div className="info-strip"><span className="info-strip__icon">i</span><p><strong>Help us respond faster.</strong> Include a clear description and choose the collection point nearest to the issue.</p></div>
+    </DashboardShell>
+  );
 }
-
-export default UserHome

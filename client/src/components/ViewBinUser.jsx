@@ -22,18 +22,23 @@ const ViewBinUser = () => {
   
   const [binData, setBinData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
 
   useEffect(() => {
     const fetchBinData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/v1/bin/`);
+        const response = await axios.get(`/api/v1/bin/`);
         if (response.status === 200) {
           setBinData(response.data);
         } else {
-          console.error('Error fetching bin data:', response.statusText);
+          setLoadError(`Could not load bins (${response.status}).`);
         }
       } catch (error) {
+        setLoadError('Could not connect to the server. Please try again.');
         console.error('Error fetching bin data:', error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -50,29 +55,13 @@ const ViewBinUser = () => {
     return isMatch;
   });  
 
-  const handleCall = () => {
-    window.location.href = `tel:${bin.mobile}`;
-  };
-
-
   ////////////////////////////////////////////////
   ///////Get User Email ID and Store////////////
   ////////////////////////////////////////////////  
 
   
-  const [binarea, setShareLocation] = useState(''); // Set the initial value accordingly
-  // Trigger getUserLocation when businessId changes
-  useEffect(() => {
-    if (binarea) {
-      shareLocation();
-    }
-  }, [binarea]);
-
-  const shareLocation = () => {
-    // Assuming business.adminemail contains the vendor's email
-    // Store adminemail in cookies
-    document.cookie = `binarea=${binarea}`;
-    // For example, redirect to another page
+  const openComplaint = (area) => {
+    document.cookie = `binarea=${encodeURIComponent(area)}; path=/; SameSite=Strict`;
     window.location.href = '/post_complaint';
   };
 
@@ -138,6 +127,9 @@ const ViewBinUser = () => {
               </div>
             </div>
 
+            {loading && <p>Loading bins…</p>}
+            {loadError && <p role="alert">{loadError}</p>}
+            {!loading && !loadError && filteredData.length === 0 && <p>No bins are available yet.</p>}
             <div className="row" style={{marginTop:10}}>
                 {filteredData.map((bin) => (
               <div key={bin._id} className="col-12 col-md-6">                                        
@@ -155,8 +147,8 @@ const ViewBinUser = () => {
                     </div>
                   </div>   
                   
-            <a className="btn btn-danger"onClick={() => setShareLocation(bin.area)} >Ticket</a>
-            <a className="btn btn-danger" target="_blank"
+            <a className="btn btn-danger" onClick={() => openComplaint(bin.area)}>Ticket</a>
+            <a className="btn btn-danger" target="_blank" rel="noreferrer"
                   href={`https://maps.google.com/?q=${bin.lat},${bin.long}`}>
                   Show Map
                 </a>

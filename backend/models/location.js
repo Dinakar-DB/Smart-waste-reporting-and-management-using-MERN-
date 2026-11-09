@@ -29,8 +29,8 @@ const locationSchema = mongoose.Schema({
         default: 'Pending',   
     },
     dateCreated: {
-        type: String, // Store as string to prevent automatic conversion to local time in MongoDB
-        default: new Date().toISOString(),
+        type: Date,
+        default: Date.now,
     }
 })
 

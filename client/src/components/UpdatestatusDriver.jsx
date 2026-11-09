@@ -21,8 +21,7 @@ import Title from './Title.jsx';
 
 const UpdatestatusDriver = () => {
  
-    const binarea = (document.cookie.replace(/(?:(?:^|.*;\s*)binarea\s*=\s*([^;]*).*$)|^.*$/, '$1'));
-    const driveremail = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)driveremail\s*=\s*([^;]*).*$)|^.*$/, '$1'));
+    const binarea = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)binarea\s*=\s*([^;]*).*$)|^.*$/, '$1'));
   
     const [formData, setFormData] = useState({
       binarea: '',
@@ -34,7 +33,7 @@ const UpdatestatusDriver = () => {
     const postWorkData = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch('http://localhost:4000/api/v1/work/', {
+        const response = await fetch('/api/v1/work/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -43,7 +42,6 @@ const UpdatestatusDriver = () => {
           body: JSON.stringify({
             ...formData,
             binarea: binarea,
-            driveremail: driveremail,
           }),
         });
   
@@ -54,7 +52,9 @@ const UpdatestatusDriver = () => {
           window.location.href = "/view_bin_driver";
   
         } else {
-          console.error('Error posting bin data:', response.statusText);
+          const details = await response.json().catch(() => ({}));
+          alert(details.message || 'Could not submit the work update. Please sign in again and retry.');
+          console.error('Error posting work update:', details.message || response.statusText);
         }
       } catch (error) {
         console.error('Error posting bin data:', error.message);

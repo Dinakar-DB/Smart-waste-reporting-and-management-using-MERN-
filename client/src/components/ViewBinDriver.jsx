@@ -37,7 +37,12 @@ const ViewBinDriver = () => {
           updateLocationOnServer(latitude, longitude);
         },
         (error) => {
-          console.error(`Error getting user location: ${error.message}`);
+          const reason = error.code === error.PERMISSION_DENIED
+            ? 'Location access is blocked. Allow it in browser site settings and try again.'
+            : error.code === error.TIMEOUT
+              ? 'Could not determine your location in time. Try again outdoors or check GPS.'
+              : 'Could not determine your location. Check device location settings.';
+          alert(reason);
         }
       );
     } else {
@@ -47,14 +52,14 @@ const ViewBinDriver = () => {
    // Update location on the server
    async function updateLocationOnServer(latitude, longitude) {
   //  const binId = "6576e6dcfa3350243c6af5b3"; // Replace with the actual bin ID
-    const url = `http://localhost:4000/api/v1/bin/map/` + binId;
+    const url = `/api/v1/bin/map/` + binId;
   
     try {
       const response = await fetch(url, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          // Add any additional headers, such as authentication token if needed
+          'x-auth-token': localStorage.getItem('token'),
         },
         body: JSON.stringify({
           lat: latitude,
@@ -67,7 +72,8 @@ const ViewBinDriver = () => {
         console.log("Location updated successfully!");
         window.location.reload();
       } else {
-        console.error(`Error updating location: ${response.statusText}`);
+        const data = await response.json().catch(() => ({}));
+        alert(data.message || `Location update failed (${response.status}).`);
       }
     } catch (error) {
       console.error(`Error updating location: ${error.message}`);
@@ -90,20 +96,9 @@ const ViewBinDriver = () => {
 
   
 
-const [binarea, LoadEdit] = useState(''); // Set the initial value accordingly
-  // Trigger getUserLocation when businessId changes
-  useEffect(() => {
-    if (binarea) {
-      shareLocation();
-    }
-  }, [binarea]);
-
-  const shareLocation = () => {
-    // Assuming business.adminemail contains the vendor's email
-    // Store adminemail in cookies
-    document.cookie = `binarea=${binarea}`;
-    // For example, redirect to another page
-    window.location.href = ("/updatestatus_driver");
+  const startWorkUpdate = (area) => {
+    document.cookie = `binarea=${encodeURIComponent(area)}; path=/; SameSite=Strict`;
+    window.location.href = '/updatestatus_driver';
   };
   
 
@@ -112,22 +107,21 @@ const [binarea, LoadEdit] = useState(''); // Set the initial value accordingly
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
 
   useEffect(() => {
     const fetchBinData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/v1/bin/');
+        const response = await fetch('/api/v1/bin/assigned', { headers: { 'x-auth-token': localStorage.getItem('token') } });
         const data = await response.json();
-
-        // Assuming 'adminemail' is the key in cookies
-        const driveremail = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)driveremail\s*=\s*([^;]*).*$)|^.*$/, '$1'));
-         // Filter bin data based on adminemail
-         const filteredBin = data.filter((bin) => bin.driveremail === driveremail);
-         setBinData(filteredBin);
-         setFilteredData(filteredBin);
-         setLoading(false);
+        if (!response.ok) throw new Error(data.message || `Could not load assigned bins (${response.status}).`);
+        if (!Array.isArray(data)) throw new Error('The server returned an invalid bin list.');
+        setBinData(data);
+        setFilteredData(data);
       } catch (error) {
+        setLoadError(error.message || 'Could not load assigned bins.');
         console.error('Error fetching bin data:', error.message);
+      } finally {
         setLoading(false);
       }
     };
@@ -149,7 +143,7 @@ const [binarea, LoadEdit] = useState(''); // Set the initial value accordingly
   };
   
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading assigned bins…</div>;
   }
   
   return (
@@ -206,6 +200,8 @@ const [binarea, LoadEdit] = useState(''); // Set the initial value accordingly
               </div>
             </div>
 
+            {loadError && <p role="alert">{loadError}</p>}
+            {!loadError && filteredData.length === 0 && <p>No bins are assigned to this driver yet.</p>}
             {/* Show if Null data in table */}
 
             {filteredData.length > 0 ? (
@@ -228,7 +224,8 @@ const [binarea, LoadEdit] = useState(''); // Set the initial value accordingly
                     </div>
                   </div>   
                   
-                  <a className="btn btn-danger" onClick={() => { LoadEdit(bin.area) }}>Update</a>
+                  <a className="btn btn-danger" onClick={() => startWorkUpdate(bin.area)}>Update</a>
+                  <button className="btn btn-danger" type="button" onClick={() => setBinId(bin.id)}>Update to Current GPS Location</button>
                  <a className="btn btn-danger" target="_blank"
                   href={`https://maps.google.com/?q=${bin.lat},${bin.long}`}>
                   Show Map

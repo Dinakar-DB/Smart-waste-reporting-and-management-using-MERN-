@@ -26,11 +26,11 @@ const driverSchema = new mongoose.Schema({
     },
     address: {
         type: String,
-        default: true,
+        default: '',
     },
     area: {
         type: String,
-        default: true,
+        default: '',
     },
     aadharno: {
         type: String,

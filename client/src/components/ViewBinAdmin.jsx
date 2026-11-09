@@ -37,7 +37,12 @@ const ViewBinAdmin = () => {
           updateLocationOnServer(latitude, longitude);
         },
         (error) => {
-          console.error(`Error getting user location: ${error.message}`);
+          const reason = error.code === error.PERMISSION_DENIED
+            ? 'Location access is blocked. Allow it in browser site settings and try again.'
+            : error.code === error.TIMEOUT
+              ? 'Could not determine your location in time. Try again outdoors or check GPS.'
+              : 'Could not determine your location. Check device location settings.';
+          alert(reason);
         }
       );
     } else {
@@ -47,14 +52,14 @@ const ViewBinAdmin = () => {
    // Update location on the server
    async function updateLocationOnServer(latitude, longitude) {
   //  const binId = "6576e6dcfa3350243c6af5b3"; // Replace with the actual bin ID
-    const url = `http://localhost:4000/api/v1/bin/map/` + binId;
+    const url = `/api/v1/bin/map/` + binId;
   
     try {
       const response = await fetch(url, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          // Add any additional headers, such as authentication token if needed
+          'x-auth-token': localStorage.getItem('token'),
         },
         body: JSON.stringify({
           lat: latitude,
@@ -67,7 +72,8 @@ const ViewBinAdmin = () => {
         console.log("Location updated successfully!");
         window.location.reload();
       } else {
-        console.error(`Error updating location: ${response.statusText}`);
+        const data = await response.json().catch(() => ({}));
+        alert(data.message || `Location update failed (${response.status}).`);
       }
     } catch (error) {
       console.error(`Error updating location: ${error.message}`);
@@ -94,7 +100,7 @@ const ViewBinAdmin = () => {
     if (window.confirm('Do you want to remove?')) {
       const token = localStorage.getItem('token');
 
-        fetch("http://localhost:4000/api/v1/bin/" + id, {
+        fetch("/api/v1/bin/" + id, {
             method: "DELETE",
             headers: {
               'Content-Type': 'application/json',
@@ -117,9 +123,6 @@ const updateBin = (id) => {
   navigate("/map/" + id);
 }
 
-const UpdateLocation = (id) => {
-  navigate("/geolocation/" + id);
-}
   
   const [binData, setBinData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -129,7 +132,7 @@ const UpdateLocation = (id) => {
   useEffect(() => {
     const fetchBinData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/v1/bin/');
+        const response = await fetch('/api/v1/bin/');
         const data = await response.json();
 
         // Assuming 'adminemail' is the key in cookies
@@ -244,7 +247,7 @@ const UpdateLocation = (id) => {
                   <a className="btn btn-danger" onClick={() => { LoadEdit(bin.id) }}>Update</a>
                   <a className="btn btn-danger" onClick={() => { Removefunction(bin.id) }}>Delete</a>
                  <a className="btn btn-danger" onClick={() => updateBin(bin.id)}>Update Map</a> 
-                 <a className="btn btn-danger" onClick={() => setBinId(bin.id)}>Geo Map</a> 
+                 <button className="btn btn-danger" type="button" onClick={() => setBinId(bin.id)}>Update to Current GPS Location</button>
 
                  <a className="btn btn-danger" target="_blank"
                   href={`https://maps.google.com/?q=${bin.lat},${bin.long}`}>

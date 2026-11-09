@@ -25,91 +25,29 @@ const ViewComplaintsUser = () => {
   //////////////Navgation Code Start//////////////
   ////////////////////////////////////////////////
   
-  const [binId, setGeoLocation] = useState(''); // Set the initial value accordingly
-  // Function to get user location and update on the server
-  const getUserLocation = async () => {
-    
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-          console.log(`ID: ${binId}`);
-          updateLocationOnServer(latitude, longitude);
-        },
-        (error) => {
-          console.error(`Error getting user location: ${error.message}`);
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  };
-   // Update location on the server
-   async function updateLocationOnServer(latitude, longitude) {
-  //  const binId = "6576e6dcfa3350243c6af5b3"; // Replace with the actual business ID
-    const url = `http://localhost:4000/api/v1/location/map/` + complaintId;
-  
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          // Add any additional headers, such as authentication token if needed
-        },
-        body: JSON.stringify({
-          lat: latitude,
-          long: longitude,
-        }),
-      });
-  
-      if (response.ok) {
-        alert("Location updated successfully!");
-        console.log("Location updated successfully!");
-        window.location.reload();
-      } else {
-        console.error(`Error updating location: ${response.statusText}`);
-      }
-    } catch (error) {
-      console.error(`Error updating location: ${error.message}`);
-    }
-  }
-  // Trigger getUserLocation when businessId changes
-  useEffect(() => {
-    if (binId) {
-      getUserLocation();
-    }
-  }, [binId]);
-
-  ////////////////////////////////////////////////
-  //////////////Navgation Code End ///////////////
-  ////////////////////////////////////////////////
-
-  ////////////////////////////////////////////////
-  ////////////// Get Details Location ////////////
-  ////////////////////////////////////////////////
-
-
   const [binData, setBinData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
+  const [loadError, setLoadError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBinData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/v1/complaint/');
+      const response = await fetch('/api/v1/complaint/', { headers: { 'x-auth-token': localStorage.getItem('token') } });
+        if (!response.ok) {
+          const details = await response.json().catch(() => ({}));
+          throw new Error(details.message || `Unable to load complaints (${response.status}).`);
+        }
         const data = await response.json();
-
-        // Assuming 'useremail' is the key in cookies
-        const useremail = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)email\s*=\s*([^;]*).*$)|^.*$/, '$1'));
-         // Filter location data based on vendoremail
-         const filteredBin = data.filter((complaint) => complaint.useremail === useremail);
-         setBinData(filteredBin);
-         setFilteredData(filteredBin);
+        setBinData(data);
+        setFilteredData(data);
         
       } catch (error) {
-        console.error('Error fetching location data:', error.message);
-      
+        setLoadError(error.message || 'Could not load complaints.');
+        console.error('Error fetching complaints:', error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -188,6 +126,9 @@ const ViewComplaintsUser = () => {
             </div>
 
             <div className="row" style={{marginTop:10}}>
+                {loading && <p>Loading complaints…</p>}
+                {loadError && <p role="alert">{loadError}</p>}
+                {!loading && !loadError && filteredData.length === 0 && <p>No complaints have been submitted yet.</p>}
                 {filteredData.map((complaint) => (
               <div key={complaint._id} className="col-12 col-md-6">                                        
         

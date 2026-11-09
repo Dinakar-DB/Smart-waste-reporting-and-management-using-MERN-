@@ -1,7 +1,6 @@
-import React, { useState,useEffect  } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import axios from 'axios';
 import "./css/bootstrap.min.css";
 import "./css/owl.carousel.min.css";
 import "./css/font-awesome.min.css";
@@ -26,24 +25,6 @@ const UserRegister = () => {
     
       const [validationErrors, setValidationErrors] = useState({});
         
-    /////////////Email Validation //////////////
-      const [existingEmails, setExistingEmails] = useState([]);
-
-      useEffect(() => {
-        const fetchExistingEmails = async () => {
-          try {
-            const response = await axios.get('http://localhost:4000/api/v1/user/');
-            const emails = response.data.map(user => user.email);
-            setExistingEmails(emails);
-          } catch (error) {
-            console.error('Error fetching existing emails:', error);
-          }
-        };
-
-        fetchExistingEmails();
-      }, []);
-    /////////////Email Validation //////////////
-
       const handleChange = (e) => {
         const { name, value } = e.target;
         setUserData({
@@ -77,11 +58,6 @@ const UserRegister = () => {
     
       // Validate email (you might want to use a more sophisticated email validation)
       //const existingEmails = ['panner224@gmail.com', 'anotherexisting@example.com'];
-      if (existingEmails.includes(userData.email.toLowerCase())) {
-        errors.email = 'Email already exists';
-        isValid = false;
-      }
-
         setValidationErrors(errors);
     
         return isValid;
@@ -90,7 +66,7 @@ const UserRegister = () => {
       // Post Function
       const postRegisterData = async () => {
         try {
-          const response = await fetch('http://localhost:4000/api/v1/user/', {
+          const response = await fetch('/api/v1/user/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -106,7 +82,8 @@ const UserRegister = () => {
             window.location.href = "/";
     
           } else {
-            alert('Registered UnSuccessfully.')
+            const errorBody = await response.json().catch(() => ({}));
+            alert(errorBody.message || 'Could not register. Please check your details.');
             // Handle errors
             console.error('Error submitting form data:', response.statusText);
           }

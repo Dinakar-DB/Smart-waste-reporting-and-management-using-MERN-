@@ -42,11 +42,8 @@ const CreateBin = () => {
 
   const postbinData = async () => {
     const token = localStorage.getItem('token');
-    const adminEmail = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)adminemail\s*=\s*([^;]*).*$)|^.*$/, '$1'));
-    //console.log(adminEmail);  // Output: admin@gmail.com
-
     try {
-      const response = await fetch('http://localhost:4000/api/v1/bin/', {
+      const response = await fetch('/api/v1/bin/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +51,6 @@ const CreateBin = () => {
         },
         body: JSON.stringify({
           ...formData,
-          adminemail: adminEmail,
         }),
       });
 
@@ -65,7 +61,9 @@ const CreateBin = () => {
         window.location.href = "/view_bin_admin";
 
       } else {
-        console.error('Error posting business data:', response.statusText);
+        const details = await response.json().catch(() => ({}));
+        alert(details.message || 'Could not create bin. Please check the required fields and sign in again.');
+        console.error('Error creating bin:', details.message || response.statusText);
       }
     } catch (error) {
       console.error(' Route Error posting Bin data:', error.message);
@@ -149,13 +147,13 @@ const CreateBin = () => {
                   <input className="form-control"
                     name="area" id="area"
                     value={formData.area}
-                    onChange={handleInputChange}    type="text"  />
+                    onChange={handleInputChange}    type="text" required />
                 </div>
                 <div className="mb-3">
                   <div className="title mb-2"><span>Locality</span></div>
                   <input className="form-control" name="locality" id="locality"
                     value={formData.locality}
-                    onChange={handleInputChange}   type="text"/>
+                    onChange={handleInputChange}   type="text" required />
                 </div>
 	  
 
@@ -163,21 +161,21 @@ const CreateBin = () => {
                   <div className="title mb-2"><span>Landmark</span></div>
                   <input className="form-control" name="landmark" id="landmark"
                     value={formData.landmark}
-                    onChange={handleInputChange}   type="text" />
+                    onChange={handleInputChange}   type="text" required />
                 </div>
 
 	    			<div className="mb-3">
                   <div className="title mb-2"><span>City</span></div>
                   <input className="form-control" name="city" id="city"
                     value={formData.city}
-                    onChange={handleInputChange}   type="text" />
+                    onChange={handleInputChange}   type="text" required />
                 </div>
 
             <div className="mb-3">
                   <div className="title mb-2"><span>Load type</span></div>
                     <select name="loadtype" id="loadtype"
                     value={formData.loadtype}
-                    onChange={handleInputChange}>
+                    onChange={handleInputChange} required>
                           <option value="">Load type</option>
                           <option value="Daily">Low</option>
                           <option value="Twice">Medium</option>
@@ -189,7 +187,7 @@ const CreateBin = () => {
                   <div className="title mb-2"><span>Asssign Driver's email</span></div>
                   <input className="form-control" name="driveremail" id="driveremail"
                     value={formData.driveremail}
-                    onChange={handleInputChange}   type="text" />
+                    onChange={handleInputChange}   type="email" required />
                 </div>
 
                 
@@ -197,7 +195,7 @@ const CreateBin = () => {
                   <div className="title mb-2"><span>Cycle period</span></div>
                     <select name="cycleperiod" id="cycleperiod"
                     value={formData.cycleperiod}
-                    onChange={handleInputChange}    >
+                    onChange={handleInputChange} required >
                           <option value="">Cycle Period</option>
                           <option value="Daily">Daily</option>
                           <option value="Twice">Twice</option>
@@ -210,7 +208,7 @@ const CreateBin = () => {
                   <div className="title mb-2"><span>Best route</span></div>
                   <textarea className="form-control" name="bestroute" id="bestroute"
                     value={formData.bestroute}
-                    onChange={handleInputChange}   type="text" />
+                    onChange={handleInputChange}   type="text" required />
                 </div>
 					
         

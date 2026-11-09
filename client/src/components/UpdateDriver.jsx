@@ -41,18 +41,18 @@ const UpdateDriver = () => {
   useEffect(() => {
     const fetchDriverDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/v1/driver/${id}`);
+        const response = await fetch(`/api/v1/driver/${id}`, { headers: { 'x-auth-token': token } });
         if (response.ok) {
           const data = await response.json();
           setEditedDriver({
             
             name: data.name  ,
             email: data.email ,         
-            password: data.password ,
+            password: '',
             address: data.address, 
             mobile: data.mobile ,
             area: data.area ,
-            aadharno: data.aadharno 
+            aadharno: data.aadharno || ''
             
           });
         }else {
@@ -86,11 +86,11 @@ const UpdateDriver = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:4000/api/v1/driver/${id}`, {
+      const response = await fetch(`/api/v1/driver/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-        //  'x-auth-token': token,
+          'x-auth-token': token,
         },
         body: JSON.stringify(editedDriver),
       });

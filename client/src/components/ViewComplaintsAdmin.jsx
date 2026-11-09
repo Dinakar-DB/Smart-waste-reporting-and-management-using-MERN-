@@ -30,19 +30,25 @@ const ViewComplaintsAdmin = () => {
   const [binData, setBinData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
 
   useEffect(() => {
     const fetchBinData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/v1/complaint/');
+        const response = await fetch('/api/v1/complaint/', { headers: { 'x-auth-token': localStorage.getItem('token') } });
         const filteredBin = await response.json();
+        if (!response.ok) throw new Error(filteredBin.message || `Request failed (${response.status}).`);
+        if (!Array.isArray(filteredBin)) throw new Error('The server returned an invalid complaint list.');
 
          setBinData(filteredBin);
          setFilteredData(filteredBin);
         
       } catch (error) {
-        console.error('Error fetching location data:', error.message);
-      
+        setLoadError(error.message || 'Could not load complaints.');
+        console.error('Error fetching complaints:', error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -121,6 +127,9 @@ const ViewComplaintsAdmin = () => {
             </div>
 
             <div className="row" style={{marginTop:10}}>
+                {loading && <p>Loading complaints…</p>}
+                {loadError && <p role="alert">{loadError}</p>}
+                {!loading && !loadError && filteredData.length === 0 && <p>No complaints have been submitted yet.</p>}
                 {filteredData.map((complaint) => (
               <div key={complaint._id} className="col-12 col-md-6">                                        
         
